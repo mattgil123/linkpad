@@ -43,6 +43,109 @@
       );
     }
 
+    /* ── SETUP SCREEN ── */
+    #setupScreen {
+      display: none;
+      max-width: 520px;
+      margin: 6rem auto 0;
+    }
+
+    #setupScreen.active { display: block; }
+
+    .setup-title {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--green);
+      text-shadow: 0 0 12px rgba(0,255,157,0.5);
+      margin-bottom: 0.4rem;
+    }
+
+    .setup-sub {
+      font-size: 0.68rem;
+      color: var(--text-3);
+      margin-bottom: 2rem;
+      letter-spacing: 0.04em;
+    }
+
+    .setup-step {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 2px solid var(--green-dim);
+      border-radius: var(--radius);
+      padding: 1rem 1.1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .setup-step-num {
+      font-size: 0.58rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--green-dim);
+      margin-bottom: 0.35rem;
+    }
+
+    .setup-step p {
+      font-size: 0.75rem;
+      color: var(--text-2);
+      line-height: 1.7;
+    }
+
+    .setup-step a {
+      color: var(--amber);
+      text-decoration: none;
+    }
+
+    .setup-step a:hover { text-decoration: underline; }
+
+    .setup-step code {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 0.1rem 0.4rem;
+      font-size: 0.72rem;
+      color: var(--green);
+    }
+
+    .token-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .token-input {
+      flex: 1;
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      padding: 0.55rem 0.75rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border-2);
+      background: var(--bg-2);
+      color: var(--green);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      caret-color: var(--green);
+    }
+
+    .token-input:focus {
+      border-color: var(--green-dim);
+      box-shadow: 0 0 10px rgba(0,255,157,0.1);
+    }
+
+    .token-input::placeholder { color: var(--text-3); }
+
+    .setup-error {
+      font-size: 0.7rem;
+      color: var(--danger);
+      margin-top: 0.6rem;
+      min-height: 1rem;
+    }
+
+    /* ── APP SCREEN ── */
+    #appScreen { display: none; }
+    #appScreen.active { display: block; }
+
     /* ── HEADER ── */
     header {
       max-width: 700px;
@@ -69,13 +172,44 @@
 
     .wordmark .slash { color: var(--text-2); }
 
-    .header-actions { display: flex; gap: 0.4rem; }
+    .header-actions { display: flex; gap: 0.4rem; align-items: center; }
 
     .header-sub {
       font-size: 0.62rem;
       color: var(--text-3);
       letter-spacing: 0.06em;
     }
+
+    .sync-indicator {
+      font-size: 0.6rem;
+      letter-spacing: 0.08em;
+      color: var(--text-3);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .sync-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--text-3);
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+
+    .sync-dot.syncing {
+      background: var(--amber);
+      box-shadow: 0 0 6px var(--amber);
+      animation: pulse 0.8s ease infinite;
+    }
+
+    .sync-dot.synced {
+      background: var(--green);
+      box-shadow: 0 0 6px rgba(0,255,157,0.5);
+    }
+
+    .sync-dot.error { background: var(--danger); box-shadow: 0 0 6px rgba(255,75,110,0.5); }
+
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
     .cursor-blink {
       display: inline-block;
@@ -112,6 +246,11 @@
       box-shadow: 0 0 8px rgba(0,255,157,0.15);
     }
 
+    .btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
     .btn-green {
       background: var(--green-bg);
       color: var(--green);
@@ -121,6 +260,18 @@
     .btn-green:hover {
       background: rgba(0,255,157,0.12);
       box-shadow: 0 0 14px rgba(0,255,157,0.25);
+    }
+
+    .btn-danger {
+      color: var(--danger);
+      border-color: rgba(255,75,110,0.3);
+    }
+
+    .btn-danger:hover {
+      background: rgba(255,75,110,0.08);
+      border-color: var(--danger);
+      color: var(--danger);
+      box-shadow: none;
     }
 
     /* ── MAIN ── */
@@ -206,27 +357,18 @@
     .search-wrap { flex: 1; position: relative; }
 
     .search-prefix {
-      position: absolute;
-      left: 0.65rem; top: 50%;
+      position: absolute; left: 0.65rem; top: 50%;
       transform: translateY(-50%);
-      color: var(--text-3);
-      font-size: 0.65rem;
-      pointer-events: none;
-      letter-spacing: 0;
+      color: var(--text-3); font-size: 0.65rem; pointer-events: none;
     }
 
     .search-input {
       width: 100%;
-      font-family: var(--mono);
-      font-size: 0.78rem;
+      font-family: var(--mono); font-size: 0.78rem;
       padding: 0.48rem 0.75rem 0.48rem 1.9rem;
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      background: var(--surface);
-      color: var(--text);
-      outline: none;
-      transition: border-color 0.15s;
-      caret-color: var(--green);
+      border-radius: var(--radius); border: 1px solid var(--border);
+      background: var(--surface); color: var(--text);
+      outline: none; transition: border-color 0.15s; caret-color: var(--green);
     }
 
     .search-input:focus { border-color: var(--border-2); }
@@ -238,45 +380,28 @@
     .link-list { display: flex; flex-direction: column; gap: 0.5rem; }
 
     .empty-state {
-      text-align: center;
-      padding: 4rem 1rem;
-      color: var(--text-3);
-      font-size: 0.72rem;
-      line-height: 2;
-      letter-spacing: 0.04em;
+      text-align: center; padding: 4rem 1rem;
+      color: var(--text-3); font-size: 0.72rem; line-height: 2; letter-spacing: 0.04em;
     }
 
     .empty-state .big {
-      display: block;
-      font-size: 0.62rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--green);
-      margin-bottom: 0.4rem;
+      display: block; font-size: 0.62rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--green); margin-bottom: 0.4rem;
       text-shadow: 0 0 10px rgba(0,255,157,0.4);
     }
 
     /* ── LINK CARD ── */
     .link-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 0.75rem 0.9rem;
-      display: flex;
-      align-items: flex-start;
-      gap: 0.7rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 0.75rem 0.9rem;
+      display: flex; align-items: flex-start; gap: 0.7rem;
       transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
-      animation: slideIn 0.18s ease;
-      position: relative;
+      animation: slideIn 0.18s ease; position: relative;
     }
 
     .link-card::before {
-      content: '';
-      position: absolute;
-      left: 0; top: 0; bottom: 0;
-      width: 2px;
-      background: var(--border);
-      border-radius: 2px 0 0 2px;
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+      width: 2px; background: var(--border); border-radius: 2px 0 0 2px;
       transition: background 0.15s, box-shadow 0.15s;
     }
 
@@ -289,38 +414,24 @@
     }
 
     .favicon { width: 16px; height: 16px; border-radius: 3px; flex-shrink: 0; margin-top: 3px; opacity: 0.8; }
-
     .link-body { flex: 1; min-width: 0; }
 
     .link-title {
-      font-size: 0.82rem;
-      font-weight: 500;
-      color: var(--text);
-      text-decoration: none;
-      display: block;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      line-height: 1.4;
-      transition: color 0.12s;
+      font-size: 0.82rem; font-weight: 500; color: var(--text);
+      text-decoration: none; display: block;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      line-height: 1.4; transition: color 0.12s;
     }
 
     .link-title:hover { color: var(--green); text-shadow: 0 0 8px rgba(0,255,157,0.3); }
 
     .link-url {
-      display: block;
-      font-size: 0.65rem;
-      color: var(--text-3);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin-top: 0.15rem;
+      display: block; font-size: 0.65rem; color: var(--text-3);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 0.15rem;
     }
 
     .link-note { font-size: 0.72rem; color: var(--text-2); margin-top: 0.3rem; line-height: 1.5; }
-
     .link-meta { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.3rem; }
-
     .link-date { font-size: 0.6rem; color: var(--text-3); letter-spacing: 0.05em; }
 
     .link-actions { display: flex; gap: 0.25rem; flex-shrink: 0; margin-top: 1px; }
@@ -328,8 +439,7 @@
     .icon-btn {
       background: none; border: none; cursor: pointer;
       color: var(--text-3); padding: 0.25rem; border-radius: 3px;
-      transition: color 0.12s, background 0.12s;
-      display: flex; align-items: center;
+      transition: color 0.12s, background 0.12s; display: flex; align-items: center;
     }
 
     .icon-btn:hover { color: var(--green); background: var(--green-bg); }
@@ -338,17 +448,15 @@
     /* ── MODAL ── */
     .modal-backdrop {
       display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,0.7); backdrop-filter: blur(3px);
+      background: rgba(0,0,0,0.75); backdrop-filter: blur(3px);
       z-index: 100; align-items: center; justify-content: center; padding: 1rem;
     }
 
     .modal-backdrop.open { display: flex; }
 
     .modal {
-      background: var(--surface);
-      border: 1px solid var(--border-2);
-      border-top: 2px solid var(--green);
-      border-radius: var(--radius);
+      background: var(--surface); border: 1px solid var(--border-2);
+      border-top: 2px solid var(--green); border-radius: var(--radius);
       padding: 1.5rem; width: 100%; max-width: 420px;
       box-shadow: 0 0 40px rgba(0,0,0,0.6), 0 0 20px rgba(0,255,157,0.05);
       animation: popIn 0.15s ease;
@@ -363,13 +471,6 @@
     }
 
     .modal p { font-size: 0.75rem; color: var(--text-2); margin-bottom: 0.9rem; line-height: 1.6; }
-
-    .modal textarea {
-      width: 100%; font-family: var(--mono); font-size: 0.68rem;
-      padding: 0.6rem; border: 1px solid var(--border-2); border-radius: var(--radius);
-      background: var(--bg-2); color: var(--green); resize: vertical; height: 110px;
-      outline: none; caret-color: var(--green);
-    }
 
     .modal-actions { display: flex; gap: 0.4rem; justify-content: flex-end; margin-top: 1rem; }
 
@@ -386,8 +487,10 @@
     }
 
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast.err { border-color: var(--danger); color: var(--danger); box-shadow: 0 0 16px rgba(255,75,110,0.2); }
 
     @media (max-width: 480px) {
+      #setupScreen { margin-top: 3rem; }
       header { padding: 1.75rem 0 1.25rem; }
       .input-row { flex-direction: column; }
     }
@@ -395,58 +498,86 @@
 </head>
 <body>
 
-<header>
-  <div class="header-top">
-    <span class="wordmark"><span class="slash">// </span>LINKPAD<span class="cursor-blink"></span></span>
-    <div class="header-actions">
-      <button class="btn" id="importBtn">Import</button>
-      <button class="btn" id="exportBtn">Export</button>
+<!-- ── SETUP SCREEN ── -->
+<div id="setupScreen">
+  <div class="setup-title">// LINKPAD · Setup</div>
+  <div class="setup-sub">one-time configuration · takes ~2 minutes</div>
+
+  <div class="setup-step">
+    <div class="setup-step-num">Step 01 — Create a GitHub Token</div>
+    <p>
+      Go to <a href="https://github.com/settings/tokens/new?scopes=gist&description=Linkpad" target="_blank" rel="noopener">github.com/settings/tokens/new</a>,
+      set the note to <code>Linkpad</code>, check only the <code>gist</code> scope,
+      set expiration to <code>No expiration</code>, then click <strong>Generate token</strong>.
+      Copy the token — it starts with <code>ghp_</code>.
+    </p>
+  </div>
+
+  <div class="setup-step">
+    <div class="setup-step-num">Step 02 — Paste Your Token</div>
+    <p>Paste the token below. It will be stored only in this browser and used solely to read and write your private Gist.</p>
+    <div class="token-row">
+      <input type="password" id="tokenInput" class="token-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off" spellcheck="false" />
+      <button class="btn btn-green" id="connectBtn">Connect</button>
     </div>
+    <div class="setup-error" id="setupError"></div>
   </div>
-  <div class="header-sub">personal url notepad &nbsp;·&nbsp; stored locally &nbsp;·&nbsp; export to sync</div>
-</header>
+</div>
 
-<main>
-  <div class="prompt-line">
-    <span class="p-symbol">$</span><span class="p-cmd">linkpad</span> --add-url
-  </div>
-
-  <!-- Add URL -->
-  <div class="add-card">
-    <label for="urlInput">Paste a URL</label>
-    <div class="input-row">
-      <input type="url" id="urlInput" class="url-input" placeholder="https://..." autocomplete="off" spellcheck="false" />
-      <button class="btn btn-green" id="addBtn">Save</button>
+<!-- ── APP SCREEN ── -->
+<div id="appScreen">
+  <header>
+    <div class="header-top">
+      <span class="wordmark"><span class="slash">// </span>LINKPAD<span class="cursor-blink"></span></span>
+      <div class="header-actions">
+        <div class="sync-indicator">
+          <div class="sync-dot" id="syncDot"></div>
+          <span id="syncLabel">idle</span>
+        </div>
+        <button class="btn btn-danger" id="disconnectBtn" title="Disconnect token">Disconnect</button>
+      </div>
     </div>
-    <textarea id="noteInput" class="note-input" placeholder="Optional note…" rows="2"></textarea>
-  </div>
+    <div class="header-sub">synced via github gist &nbsp;·&nbsp; works on all devices</div>
+  </header>
 
-  <!-- Toolbar -->
-  <div class="toolbar">
-    <div class="search-wrap">
-      <span class="search-prefix">//</span>
-      <input type="search" id="searchInput" class="search-input" placeholder="search links..." />
+  <main>
+    <div class="prompt-line">
+      <span class="p-symbol">$</span><span class="p-cmd">linkpad</span> --add-url
     </div>
-    <span class="count-label" id="countLabel"></span>
-  </div>
 
-  <!-- List -->
-  <div class="link-list" id="linkList"></div>
-  <div class="empty-state" id="emptyState" style="display:none">
-    <span class="big">// no links saved</span>
-    paste a url above and hit save_
-  </div>
-</main>
+    <div class="add-card">
+      <label for="urlInput">Paste a URL</label>
+      <div class="input-row">
+        <input type="url" id="urlInput" class="url-input" placeholder="https://..." autocomplete="off" spellcheck="false" />
+        <button class="btn btn-green" id="addBtn">Save</button>
+      </div>
+      <textarea id="noteInput" class="note-input" placeholder="Optional note…" rows="2"></textarea>
+    </div>
 
-<!-- Import modal -->
-<div class="modal-backdrop" id="importModal">
+    <div class="toolbar">
+      <div class="search-wrap">
+        <span class="search-prefix">//</span>
+        <input type="search" id="searchInput" class="search-input" placeholder="search links..." />
+      </div>
+      <span class="count-label" id="countLabel"></span>
+    </div>
+
+    <div class="link-list" id="linkList"></div>
+    <div class="empty-state" id="emptyState" style="display:none">
+      <span class="big">// no links saved</span>
+      paste a url above and hit save_
+    </div>
+  </main>
+</div>
+
+<!-- Disconnect confirm modal -->
+<div class="modal-backdrop" id="disconnectModal">
   <div class="modal">
-    <div class="modal-title">// Import Links</div>
-    <p>Paste JSON exported from another device to merge your links.</p>
-    <textarea id="importData" placeholder='[{"url":"...","note":"...","title":"...","saved":"..."}]'></textarea>
+    <div class="modal-title">// Disconnect</div>
+    <p>This will remove your token from this browser. Your Gist data stays safe on GitHub. You can reconnect anytime with the same token.</p>
     <div class="modal-actions">
-      <button class="btn" id="cancelImport">Cancel</button>
-      <button class="btn btn-green" id="confirmImport">Import</button>
+      <button class="btn" id="cancelDisconnect">Cancel</button>
+      <button class="btn btn-danger" id="confirmDisconnect">Disconnect</button>
     </div>
   </div>
 </div>
@@ -454,76 +585,154 @@
 <div class="toast" id="toast"></div>
 
 <script>
-  /* ── Storage ── */
-  const STORE_KEY = 'linkpad_v1';
-  let links = [];
+  /* ════════════════════════════════════════
+     CONSTANTS & STATE
+  ════════════════════════════════════════ */
+  const TOKEN_KEY = 'linkpad_token';
+  const GIST_KEY  = 'linkpad_gist_id';
+  const GIST_FILE = 'linkpad.json';
+  const API       = 'https://api.github.com';
 
-  function load() {
-    try { links = JSON.parse(localStorage.getItem(STORE_KEY)) || []; }
-    catch { links = []; }
-  }
+  let token   = '';
+  let gistId  = '';
+  let links   = [];
+  let saving  = false;
 
-  function save() {
-    localStorage.setItem(STORE_KEY, JSON.stringify(links));
-  }
-
-  /* ── Toast ── */
+  /* ════════════════════════════════════════
+     TOAST
+  ════════════════════════════════════════ */
   let toastTimer;
-  function toast(msg) {
+  function toast(msg, isErr = false) {
     const el = document.getElementById('toast');
     el.textContent = msg;
+    el.classList.toggle('err', isErr);
     el.classList.add('show');
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
   }
 
-  /* ── Helpers ── */
-  function domain(url) {
-    try { return new URL(url).hostname.replace(/^www\./, ''); }
-    catch { return url; }
+  /* ════════════════════════════════════════
+     SYNC INDICATOR
+  ════════════════════════════════════════ */
+  function setSyncState(state) {
+    const dot   = document.getElementById('syncDot');
+    const label = document.getElementById('syncLabel');
+    dot.className = 'sync-dot ' + state;
+    label.textContent = state === 'syncing' ? 'syncing...' : state === 'synced' ? 'synced' : state === 'error' ? 'error' : 'idle';
   }
 
-  function faviconSrc(url) {
-    try { return `https://www.google.com/s2/favicons?sz=32&domain=${new URL(url).hostname}`; }
-    catch { return ''; }
+  /* ════════════════════════════════════════
+     GITHUB GIST API
+  ════════════════════════════════════════ */
+  function ghHeaders() {
+    return {
+      'Authorization': `token ${token}`,
+      'Accept': 'application/vnd.github+json',
+      'Content-Type': 'application/json'
+    };
   }
 
-  function displayTitle(link) {
-    return link.title || domain(link.url) || link.url;
+  async function createGist() {
+    const res = await fetch(`${API}/gists`, {
+      method: 'POST',
+      headers: ghHeaders(),
+      body: JSON.stringify({
+        description: 'Linkpad — personal URL notepad',
+        public: false,
+        files: { [GIST_FILE]: { content: JSON.stringify([]) } }
+      })
+    });
+    if (!res.ok) throw new Error(`GitHub API error: ${res.status}`);
+    const data = await res.json();
+    return data.id;
   }
 
-  function formatDate(iso) {
-    const d = new Date(iso);
-    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  async function loadGist() {
+    const res = await fetch(`${API}/gists/${gistId}`, { headers: ghHeaders() });
+    if (!res.ok) throw new Error(`Failed to load gist: ${res.status}`);
+    const data = await res.json();
+    const content = data.files?.[GIST_FILE]?.content;
+    return content ? JSON.parse(content) : [];
   }
 
-  /* ── Render ── */
+  async function saveGist(data) {
+    const res = await fetch(`${API}/gists/${gistId}`, {
+      method: 'PATCH',
+      headers: ghHeaders(),
+      body: JSON.stringify({
+        files: { [GIST_FILE]: { content: JSON.stringify(data, null, 2) } }
+      })
+    });
+    if (!res.ok) throw new Error(`Failed to save gist: ${res.status}`);
+  }
+
+  /* ════════════════════════════════════════
+     FIND EXISTING LINKPAD GIST
+  ════════════════════════════════════════ */
+  async function findExistingGist() {
+    let page = 1;
+    while (true) {
+      const res = await fetch(`${API}/gists?per_page=100&page=${page}`, { headers: ghHeaders() });
+      if (!res.ok) break;
+      const gists = await res.json();
+      if (!gists.length) break;
+      const found = gists.find(g => g.files?.[GIST_FILE]);
+      if (found) return found.id;
+      if (gists.length < 100) break;
+      page++;
+    }
+    return null;
+  }
+
+  /* ════════════════════════════════════════
+     PERSIST TO GIST (debounced)
+  ════════════════════════════════════════ */
+  let saveTimer;
+  async function persistLinks() {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(async () => {
+      if (saving) return;
+      saving = true;
+      setSyncState('syncing');
+      try {
+        await saveGist(links);
+        setSyncState('synced');
+        setTimeout(() => setSyncState('idle'), 2000);
+      } catch (e) {
+        setSyncState('error');
+        toast('> sync error — check connection', true);
+      } finally {
+        saving = false;
+      }
+    }, 600);
+  }
+
+  /* ════════════════════════════════════════
+     RENDER
+  ════════════════════════════════════════ */
   function render() {
-    const q = document.getElementById('searchInput').value.trim().toLowerCase();
-    const list = document.getElementById('linkList');
-    const empty = document.getElementById('emptyState');
+    const q       = document.getElementById('searchInput').value.trim().toLowerCase();
+    const list    = document.getElementById('linkList');
+    const empty   = document.getElementById('emptyState');
     const counter = document.getElementById('countLabel');
 
     const filtered = q
       ? links.filter(l =>
-          (l.url || '').toLowerCase().includes(q) ||
-          (l.note || '').toLowerCase().includes(q) ||
+          (l.url   || '').toLowerCase().includes(q) ||
+          (l.note  || '').toLowerCase().includes(q) ||
           (l.title || '').toLowerCase().includes(q))
       : links;
 
-    counter.textContent = filtered.length
-      ? `${filtered.length} link${filtered.length !== 1 ? 's' : ''}`
-      : '';
-
+    counter.textContent = filtered.length ? `${filtered.length} link${filtered.length !== 1 ? 's' : ''}` : '';
     list.innerHTML = '';
 
-    if (filtered.length === 0) {
+    if (!filtered.length) {
       empty.style.display = 'block';
     } else {
       empty.style.display = 'none';
-      filtered.forEach((link, idx) => {
+      filtered.forEach(link => {
         const realIdx = links.indexOf(link);
-        const card = document.createElement('div');
+        const card    = document.createElement('div');
         card.className = 'link-card';
         card.innerHTML = `
           <img class="favicon" src="${faviconSrc(link.url)}" alt="" onerror="this.style.display='none'" />
@@ -544,134 +753,211 @@
     }
   }
 
-  function escHtml(s) {
-    return String(s ?? '')
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
+  /* ════════════════════════════════════════
+     HELPERS
+  ════════════════════════════════════════ */
+  function domain(url) {
+    try { return new URL(url).hostname.replace(/^www\./, ''); } catch { return url; }
   }
 
-  /* ── SVG icons ── */
+  function faviconSrc(url) {
+    try { return `https://www.google.com/s2/favicons?sz=32&domain=${new URL(url).hostname}`; } catch { return ''; }
+  }
+
+  function displayTitle(link) { return link.title || domain(link.url) || link.url; }
+
+  function formatDate(iso) {
+    return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function escHtml(s) {
+    return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
   function iconCopy() {
-    return `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
+    return `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
   }
 
   function iconTrash() {
-    return `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>`;
+    return `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>`;
   }
 
-  /* ── Add link ── */
+  /* ════════════════════════════════════════
+     SCREENS
+  ════════════════════════════════════════ */
+  function showSetup() {
+    document.getElementById('setupScreen').classList.add('active');
+    document.getElementById('appScreen').classList.remove('active');
+  }
+
+  function showApp() {
+    document.getElementById('setupScreen').classList.remove('active');
+    document.getElementById('appScreen').classList.add('active');
+  }
+
+  /* ════════════════════════════════════════
+     CONNECT FLOW
+  ════════════════════════════════════════ */
+  document.getElementById('connectBtn').addEventListener('click', async () => {
+    const t = document.getElementById('tokenInput').value.trim();
+    const errEl = document.getElementById('setupError');
+    errEl.textContent = '';
+
+    if (!t) { errEl.textContent = '> token required'; return; }
+    if (!t.startsWith('ghp_') && !t.startsWith('github_pat_')) {
+      errEl.textContent = '> token should start with ghp_ or github_pat_'; return;
+    }
+
+    const btn = document.getElementById('connectBtn');
+    btn.textContent = 'Connecting...';
+    btn.disabled = true;
+
+    try {
+      token = t;
+
+      // Validate token with a simple API call
+      const check = await fetch(`${API}/user`, { headers: ghHeaders() });
+      if (!check.ok) throw new Error('Invalid token or no access');
+
+      // Look for an existing Linkpad gist
+      let existingId = await findExistingGist();
+      if (existingId) {
+        gistId = existingId;
+      } else {
+        gistId = await createGist();
+      }
+
+      // Persist to localStorage
+      localStorage.setItem(TOKEN_KEY, token);
+      localStorage.setItem(GIST_KEY, gistId);
+
+      // Load links
+      links = await loadGist();
+      showApp();
+      render();
+      setSyncState('synced');
+      setTimeout(() => setSyncState('idle'), 2000);
+      toast('> connected_');
+    } catch (e) {
+      errEl.textContent = `> ${e.message}`;
+      token = '';
+    } finally {
+      btn.textContent = 'Connect';
+      btn.disabled = false;
+    }
+  });
+
+  document.getElementById('tokenInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('connectBtn').click();
+  });
+
+  /* ════════════════════════════════════════
+     DISCONNECT
+  ════════════════════════════════════════ */
+  document.getElementById('disconnectBtn').addEventListener('click', () => {
+    document.getElementById('disconnectModal').classList.add('open');
+  });
+
+  document.getElementById('cancelDisconnect').addEventListener('click', () => {
+    document.getElementById('disconnectModal').classList.remove('open');
+  });
+
+  document.getElementById('confirmDisconnect').addEventListener('click', () => {
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(GIST_KEY);
+    token = ''; gistId = ''; links = [];
+    document.getElementById('disconnectModal').classList.remove('open');
+    showSetup();
+    document.getElementById('tokenInput').value = '';
+    document.getElementById('setupError').textContent = '';
+  });
+
+  /* ════════════════════════════════════════
+     ADD LINK
+  ════════════════════════════════════════ */
   async function addLink() {
-    const urlEl = document.getElementById('urlInput');
+    const urlEl  = document.getElementById('urlInput');
     const noteEl = document.getElementById('noteInput');
-    let url = urlEl.value.trim();
-    const note = noteEl.value.trim();
+    let url      = urlEl.value.trim();
+    const note   = noteEl.value.trim();
 
     if (!url) return;
     if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
-
-    if (existing) { toast('> already saved'); return; }
+    if (links.find(l => l.url === url)) { toast('> already saved'); return; }
 
     const link = { url, note, title: domain(url), saved: new Date().toISOString() };
     links.unshift(link);
-    save();
     render();
-
-    urlEl.value = '';
-    noteEl.value = '';
-    urlEl.focus();
+    urlEl.value = ''; noteEl.value = ''; urlEl.focus();
     toast('> saved_');
+    await persistLinks();
 
-    // Async title fetch via unfurl
+    // Async title fetch
     try {
-      const res = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(url)}`);
+      const res  = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(url)}`);
       const data = await res.json();
       if (data?.data?.title) {
         link.title = data.data.title;
-        save();
         render();
+        await persistLinks();
       }
     } catch {}
   }
 
-  /* ── Events ── */
   document.getElementById('addBtn').addEventListener('click', addLink);
-
-  document.getElementById('urlInput').addEventListener('keydown', e => {
-    if (e.key === 'Enter') addLink();
-  });
-
+  document.getElementById('urlInput').addEventListener('keydown', e => { if (e.key === 'Enter') addLink(); });
   document.getElementById('searchInput').addEventListener('input', render);
 
-  document.getElementById('linkList').addEventListener('click', e => {
+  /* ════════════════════════════════════════
+     CARD ACTIONS
+  ════════════════════════════════════════ */
+  document.getElementById('linkList').addEventListener('click', async e => {
     const btn = e.target.closest('[data-action]');
     if (!btn) return;
-    const idx = parseInt(btn.dataset.idx, 10);
+    const idx    = parseInt(btn.dataset.idx, 10);
     const action = btn.dataset.action;
 
     if (action === 'delete') {
       links.splice(idx, 1);
-      save();
       render();
       toast('> removed');
+      await persistLinks();
     }
     if (action === 'copy') {
       navigator.clipboard.writeText(links[idx].url).then(() => toast('> copied_'));
     }
   });
 
-  /* ── Export ── */
-  document.getElementById('exportBtn').addEventListener('click', () => {
-    const json = JSON.stringify(links, null, 2);
-    const blob = new Blob([json], { type: 'application/json' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `linkpad-export-${new Date().toISOString().slice(0,10)}.json`;
-    a.click();
-    toast('> exported_');
-  });
+  /* ════════════════════════════════════════
+     INIT
+  ════════════════════════════════════════ */
+  async function init() {
+    const savedToken  = localStorage.getItem(TOKEN_KEY);
+    const savedGistId = localStorage.getItem(GIST_KEY);
 
-  /* ── Import ── */
-  document.getElementById('importBtn').addEventListener('click', () => {
-    document.getElementById('importModal').classList.add('open');
-    document.getElementById('importData').value = '';
-    document.getElementById('importData').focus();
-  });
-
-  document.getElementById('cancelImport').addEventListener('click', () => {
-    document.getElementById('importModal').classList.remove('open');
-  });
-
-  document.getElementById('importModal').addEventListener('click', e => {
-    if (e.target === document.getElementById('importModal'))
-      document.getElementById('importModal').classList.remove('open');
-  });
-
-  document.getElementById('confirmImport').addEventListener('click', () => {
-    try {
-      const incoming = JSON.parse(document.getElementById('importData').value.trim());
-      if (!Array.isArray(incoming)) throw new Error();
-      let added = 0;
-      incoming.forEach(l => {
-        if (l.url && !links.find(x => x.url === l.url)) {
-          links.push(l);
-          added++;
-        }
-      });
-      links.sort((a, b) => new Date(b.saved) - new Date(a.saved));
-      save();
-      render();
-      document.getElementById('importModal').classList.remove('open');
-      toast(`> imported ${added} link${added !== 1 ? 's' : ''}`);
-    } catch {
-      toast('> error: invalid json');
+    if (!savedToken || !savedGistId) {
+      showSetup();
+      return;
     }
-  });
 
-  /* ── Init ── */
-  load();
-  render();
+    token  = savedToken;
+    gistId = savedGistId;
+    showApp();
+    setSyncState('syncing');
+
+    try {
+      links = await loadGist();
+      render();
+      setSyncState('synced');
+      setTimeout(() => setSyncState('idle'), 2000);
+    } catch (e) {
+      setSyncState('error');
+      toast('> failed to load — check token', true);
+      render();
+    }
+  }
+
+  init();
 </script>
 </body>
 </html>
